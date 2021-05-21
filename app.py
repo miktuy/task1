@@ -6,8 +6,8 @@ from src.CopyManager import CopyManager
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Copy files from config")
-    parser.add_argument("-c", "--config", type=str, default='config.xml', help="Path to config (xml file)")
+    parser = argparse.ArgumentParser(description="Copy files which are described in config")
+    parser.add_argument("-c", "--config", type=str, default='config.xml', help="Path to config (xml file). Default is './config.xml'")
     params = parser.parse_args(sys.argv[1:])
 
     handler = ConfigHandler(params.config)
