@@ -23,13 +23,19 @@ class ConfigHandler:
         tree = ET.parse(self.config_path)
         config = tree.getroot()
         for file in config:
-            if (source_path := Path(file.attrib['source_path'], file.attrib['file_name'])).exists():
+            source_path = file.attrib.get('source_path')
+            destination_path = file.attrib.get('destination_path')
+            file_name = file.attrib.get('file_name')
+            if not all((source_path, destination_path, file_name)):
+                raise KeyError(f'Not expected attributes for tag `{file.tag}`: {", ".join(file.attrib.keys())}!')
+
+            if (source := Path(source_path, file_name)).exists():
                 self.files.append(
                     FileDescription(
-                        source_path,
-                        Path(file.attrib['destination_path'], file.attrib['file_name'])
+                        source,
+                        Path(destination_path, file_name)
                     )
                 )
             else:
-                logger.warning(f'File `{source_path}` not found!')
+                logger.warning(f'File `{source}` not found!')
         return self.files

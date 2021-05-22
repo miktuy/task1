@@ -10,6 +10,13 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--config", type=str, default='config.xml', help="Path to config (xml file). Default is './config.xml'")
     params = parser.parse_args(sys.argv[1:])
 
-    handler = ConfigHandler(params.config)
-    files = handler.read_config()
+    files = []
+
+    try:
+        handler = ConfigHandler(params.config)
+        files = handler.read_config()
+    except (FileNotFoundError, KeyError) as e:
+        print(f'Error: {e}')
+        exit(1)
+
     CopyManager(files).copy()
